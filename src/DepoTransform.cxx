@@ -47,6 +47,8 @@
 #include "WireCellUtil/Units.h"
 #include "WireCellUtil/Point.h"
 
+#include <omp.h>
+
 WIRECELL_FACTORY(GenStdparDepoTransform, WireCell::GenStdpar::DepoTransform, WireCell::IDepoFramer, WireCell::IConfigurable)
 
 using namespace WireCell;
@@ -259,6 +261,11 @@ bool GenStdpar::DepoTransform::operator()(const input_pointer& in, output_pointe
                 int tbin = mm.first;
 
                 ITrace::ChargeSequence charge(wave.begin() + mm.first, wave.begin() + mm.second);
+//                std::cerr << "chid = " << chid << std::endl;
+//                std::cerr << "tbin = " << tbin << std::endl;
+//                std::cerr << "wave.begin() = " << wave.begin() << std::endl;
+//                std::cerr << "mm.first = " << mm.first << std::endl;
+//                std::cerr << "mm.second = " << mm.second << std::endl;
                 auto trace = make_shared<SimpleTrace>(chid, tbin, charge);
                 traces.push_back(trace);
             }

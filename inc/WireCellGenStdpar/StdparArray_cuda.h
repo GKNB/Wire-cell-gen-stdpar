@@ -26,7 +26,6 @@ namespace WireCell
 {
   namespace StdparArray 
   {
-
     inline void dft_rc_2d(std::complex<float>* out, const float* in, size_t N0, size_t N1)
     {
       cufftHandle plan;
@@ -103,7 +102,7 @@ namespace WireCell
         CUFFT_CALL(cufftExecC2C(plan, (cufftComplex*)in, (cufftComplex*)out, CUFFT_INVERSE));
         CUFFT_CALL(cufftDestroy(plan));
 
-        std::for_each_n(par_unseq, counting_iterator(0), N0 * N1, 
+        std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), N0 * N1, 
                         [=](unsigned int i){ out[i] /= N1; });
       }
 
@@ -116,7 +115,7 @@ namespace WireCell
         CUFFT_CALL(cufftExecC2C(plan, (cufftComplex*)in, (cufftComplex*)out, CUFFT_INVERSE));
         CUFFT_CALL(cufftDestroy(plan));
 
-        std::for_each_n(par_unseq, counting_iterator(0), N0 * N1, 
+        std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), N0 * N1, 
                         [=](unsigned int i){ out[i] /= N0; });
       }
     }
@@ -134,7 +133,7 @@ namespace WireCell
         CUFFT_CALL(cufftExecC2R(plan, (cufftComplex*)in, (cufftReal*)out));
         CUFFT_CALL(cufftDestroy(plan));
 
-        std::for_each_n(par_unseq, counting_iterator(0), N0 * N1, 
+        std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), N0 * N1, 
                         [=](unsigned int i){ out[i] /= N1; });
       }
 
@@ -147,7 +146,7 @@ namespace WireCell
         CUFFT_CALL(cufftExecC2R(plan, (cufftComplex*)in, (cufftReal*)out));
         CUFFT_CALL(cufftDestroy(plan));
 
-        std::for_each_n(par_unseq, counting_iterator(0), N0 * N1, 
+        std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), N0 * N1, 
                         [=](unsigned int i){ out[i] /= N0; });
       }
     }

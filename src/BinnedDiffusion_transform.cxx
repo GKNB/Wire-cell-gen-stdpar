@@ -558,7 +558,7 @@ void GenStdpar::BinnedDiffusion_transform::get_charge_matrix_stdpar_noscan(float
   // Kernel for calculate nt_vec and np_vec and offsets for t and p for each gd
 
   int nsigma = m_nsigma;
-  std::for_each_n(std::execution::par_unseq, counting_iterator(0), npatches, 
+  std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), npatches, 
                   [=](unsigned int i){
                     double t_s = gdata[i].t_ct - gdata[i].t_sigma * nsigma;
                     double t_e = gdata[i].t_ct + gdata[i].t_sigma * nsigma;
@@ -597,7 +597,7 @@ void GenStdpar::BinnedDiffusion_transform::get_charge_matrix_stdpar_noscan(float
 
   int weightstrat = m_calcstrat;
 
-  std::for_each_n(std::execution::par_unseq, counting_iterator(0), npatches,
+  std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), npatches,
                   [=](unsigned int ip){
                     const double sqrt2 = sqrt(2.0);
                     double start_t = tb.minval + offsets[ip] * tb.binsize;
@@ -669,7 +669,7 @@ void GenStdpar::BinnedDiffusion_transform::get_charge_matrix_stdpar_noscan(float
 
   wstart = omp_get_wtime();
   
-  std::for_each_n(std::execution::par_unseq, counting_iterator(0), npatches,
+  std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), npatches,
                   [=](unsigned int ip)
                   {
                     int np = np_vec[ip];
@@ -684,8 +684,8 @@ void GenStdpar::BinnedDiffusion_transform::get_charge_matrix_stdpar_noscan(float
                       float charge = patch[idx];
                       double weight = qweights[i % np + ip * MAX_P_SIZE]; //As Chris says, % is expansive on GPU FIXME
                       //Now position space is continuous!!! (Like in Kokkos)
-                      atomicAddWrapper(&out[(p + i % np) + dim_p * (t + i / np)], (float)(charge * weight));
-                      atomicAddWrapper(&out[(p + i % np + 1) + dim_p * (t + i / np)], (float)(charge * (1.0 - weight)));
+                      GenStdpar::atomicAddWrapper(&out[(p + i % np) + dim_p * (t + i / np)], (float)(charge * weight));
+                      GenStdpar::atomicAddWrapper(&out[(p + i % np + 1) + dim_p * (t + i / np)], (float)(charge * (1.0 - weight)));
                     }
                   });
 
@@ -791,7 +791,7 @@ void GenStdpar::BinnedDiffusion_transform::set_sampling_bat_noscan(const unsigne
   bool fl = false;
   if(m_fluctuate) fl = true;
 
-  std::for_each_n(std::execution::par_unseq, counting_iterator(0), npatches,
+  std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), npatches,
                   [=](unsigned int ip)
                   {
                     int np = np_d[ip];

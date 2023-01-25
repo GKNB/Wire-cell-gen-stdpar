@@ -21,7 +21,7 @@ using namespace WireCell;
 GenStdpar::ImpactTransform::ImpactTransform(IPlaneImpactResponse::pointer pir, BinnedDiffusion_transform& bd)
   : m_pir(pir)
   , m_bd(bd)
-  , log(Log::logger("sim"))
+//  , log(Log::logger("sim"))
   {}
 
 bool GenStdpar::ImpactTransform::transform_vector()
@@ -73,7 +73,7 @@ bool GenStdpar::ImpactTransform::transform_vector()
     m_bd.get_charge_vec(m_vec_vec_charge, m_vec_impact);
     double wend = omp_get_wtime();
     g_get_charge_vec_time += wend - wstart;
-    log->debug("ImpactTransform::ImpactTransform() : get_charge_vec() Total running time : {}", g_get_charge_vec_time);
+//    log->debug("ImpactTransform::ImpactTransform() : get_charge_vec() Total running time : {}", g_get_charge_vec_time);
 
     std::pair<int, int> impact_range = m_bd.impact_bin_range(m_bd.get_nsigma());
     std::pair<int, int> time_range = m_bd.time_bin_range(m_bd.get_nsigma());
@@ -193,7 +193,7 @@ bool GenStdpar::ImpactTransform::transform_vector()
     }
 
 
-    log->info("yuhw: start-end {}-{} {}-{}",m_start_ch, m_end_ch, m_start_tick, m_end_tick);
+//    log->info("yuhw: start-end {}-{} {}-{}",m_start_ch, m_end_ch, m_start_tick, m_end_tick);
 
     // central region ...
     {
@@ -284,12 +284,12 @@ bool GenStdpar::ImpactTransform::transform_vector()
     m_decon_data = real_m_decon_data + img_m_decon_data;
 
     double timer_fft = omp_get_wtime() - wstart;
-    log->debug("ImpactTransform::transform_vector: FFT: {}", timer_fft);
+//    log->debug("ImpactTransform::transform_vector: FFT: {}", timer_fft);
     timer_transform = omp_get_wtime() - timer_transform;
-    log->debug("ImpactTransform::transform_vector: Total: {}", timer_transform);
+//    log->debug("ImpactTransform::transform_vector: Total: {}", timer_transform);
     
-    log->debug("ImpactTransform::transform_vector: # of channels: {} # of ticks: {}", m_decon_data.rows(), m_decon_data.cols());
-    log->debug("transform_vector: m_decon_data.sum(): {}", m_decon_data.sum());
+//    log->debug("ImpactTransform::transform_vector: # of channels: {} # of ticks: {}", m_decon_data.rows(), m_decon_data.cols());
+//    log->debug("transform_vector: m_decon_data.sum(): {}", m_decon_data.sum());
 
     return true;
 }
@@ -361,7 +361,7 @@ bool GenStdpar::ImpactTransform::transform_matrix()
 
   t_temp_init = -omp_get_wtime();
 
-  std::for_each_n(std::execution::par_unseq, counting_iterator(0), dim_p * dim_t,
+  std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), dim_p * dim_t,
                   [=](unsigned int i){ f_data[i] = 0.0; });
 
   t_temp_init += omp_get_wtime();
@@ -376,14 +376,14 @@ bool GenStdpar::ImpactTransform::transform_matrix()
   std::cout << "TW_TIMING_MESSAGE: time for get_charge_matrix_stdpar is " << t_temp * 1000.0 << " ms" << std::endl;
   td1 += t_temp;
   g_get_charge_matrix_time += t_temp;
-  log->debug("ImpactTransform::ImpactTransform() : get_charge_matrix() Total_Time :  {}", g_get_charge_matrix_time);
+//  log->debug("ImpactTransform::ImpactTransform() : get_charge_matrix() Total_Time :  {}", g_get_charge_matrix_time);
 
   fft_time = -omp_get_wtime();
 
   std::complex<float> *data_c = (std::complex<float>*)malloc(sizeof(std::complex<float>) * dim_p * dim_t);
 
   t_temp_init = -omp_get_wtime();
-  std::for_each_n(std::execution::par_unseq, counting_iterator(0), dim_p * dim_t,
+  std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), dim_p * dim_t,
                   [=](unsigned int i){ data_c[i] = 0.0; });
 
   t_temp_init += omp_get_wtime();
@@ -412,7 +412,7 @@ bool GenStdpar::ImpactTransform::transform_matrix()
   
   std::complex<float> *resp_f_w_k = (std::complex<float>*)malloc(sizeof(std::complex<float>) * dim_p * dim_t);
 
-  std::for_each_n(std::execution::par_unseq, counting_iterator(0), dim_p * dim_t,
+  std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), dim_p * dim_t,
                   [=](unsigned int i){ resp_f_w_k[i] = 0.0; });
 
 //  This is the new version, where time size is set to be the smaller between m_start_tick - m_end_tick and sp_f.size()
@@ -474,7 +474,7 @@ bool GenStdpar::ImpactTransform::transform_matrix()
 
     std::complex<float> *resp_redu = (std::complex<float>*)malloc(sizeof(std::complex<float>) * nimpact * fillsize);
 
-    std::for_each_n(std::execution::par_unseq, counting_iterator(0), nimpact * fillsize,
+    std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), nimpact * fillsize,
                     [=](unsigned int i){ resp_redu[i] = 0.0; });
 
     t_temp += omp_get_wtime();
@@ -495,7 +495,7 @@ bool GenStdpar::ImpactTransform::transform_matrix()
 
       std::cout << "TW_LOG_MESSAGE: nimpact = " << nimpact << "\t  fillsize = " << fillsize << std::endl;
      
-      std::for_each_n(std::execution::par_unseq, counting_iterator(0), nimpact * fillsize,
+      std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), nimpact * fillsize,
                     [=](unsigned int i)
                     {
                       int i1 = i / fillsize;
@@ -517,7 +517,7 @@ bool GenStdpar::ImpactTransform::transform_matrix()
     wend = omp_get_wtime();
     std::cout << "TW_TIMING_MESSAGE: time for dft on resp total takes " << (wend - wstart) * 1000.0 << " ms" << std::endl;
 
-    std::for_each_n(std::execution::par_unseq, counting_iterator(0), dim_t * dim_p,
+    std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), dim_t * dim_p,
                     [=](unsigned int i){ data_c[i] *= resp_f_w_k[i]; });
 
     t_temp += omp_get_wtime();
@@ -532,7 +532,7 @@ bool GenStdpar::ImpactTransform::transform_matrix()
     t_temp = -omp_get_wtime();
 
     // extract M(channel) from M(impact)
-    std::for_each_n(std::execution::par_unseq, counting_iterator(0), acc_dim_t * acc_dim_p,
+    std::for_each_n(std::execution::par_unseq, GenStdpar::counting_iterator(0), acc_dim_t * acc_dim_p,
                     [=](unsigned int i)
                     {
                       int i1 = i / acc_dim_p;
@@ -576,16 +576,16 @@ bool GenStdpar::ImpactTransform::transform_matrix()
   t_temp = -omp_get_wtime();
  
   timer_transform += omp_get_wtime();
-  log->debug("ImpactTransform::transform_matrix: FFT: {}", fft_time);
-  log->debug("ImpactTransform::transform_matrix: Total: {}", timer_transform * 1000.0);
-  log->debug("ImpactTransform::transform_matrix: # of channels: {} # of ticks: {}", m_decon_data.rows(), m_decon_data.cols());
-  log->debug("ImpactTransform::transform_matrix: m_decon_data.sum(): {}", m_decon_data.sum());
+//  log->debug("ImpactTransform::transform_matrix: FFT: {}", fft_time);
+//  log->debug("ImpactTransform::transform_matrix: Total: {}", timer_transform * 1000.0);
+//  log->debug("ImpactTransform::transform_matrix: # of channels: {} # of ticks: {}", m_decon_data.rows(), m_decon_data.cols());
+//  log->debug("ImpactTransform::transform_matrix: m_decon_data.sum(): {}", m_decon_data.sum());
 
   std::cout<<"Tranform_matrix_p0_Time: "<<td0 <<std::endl;
   std::cout<<"get_charge_matrix_Time: "<<td1 <<std::endl;
   std::cout<<"FFTs_Time: "<< fft_time <<std::endl;
 
-  log->debug("ImpactTransform::transform_matrix: Total_FFT_Time: {}", g_fft_time);
+//  log->debug("ImpactTransform::transform_matrix: Total_FFT_Time: {}", g_fft_time);
   return true;
 }
 

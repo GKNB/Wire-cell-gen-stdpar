@@ -8,10 +8,15 @@ set(Boost_USE_MULTITHREADED ON)
 
 file(GLOB all_files ${PROJECT_SOURCE_DIR}/../src/*.cxx)
 
-find_package(CUDA REQUIRED)
+set_source_files_properties(/home/twang/myWork/wire-cell-gen-stdpar/src/BinnedDiffusion_transform.cxx PROPERTIES COMPILE_FLAGS -stdpar)
+set_source_files_properties(/home/twang/myWork/wire-cell-gen-stdpar/src/ImpactTransform.cxx PROPERTIES COMPILE_FLAGS -stdpar)
+set_source_files_properties(/home/twang/myWork/wire-cell-gen-stdpar/src/AtomicWrapper.cxx PROPERTIES COMPILE_FLAGS -stdpar)
+set_source_files_properties(/home/twang/myWork/wire-cell-gen-stdpar/src/StdparArray.cxx PROPERTIES COMPILE_FLAGS -stdpar)
 
-string(APPEND CMAKE_CXX_FLAGS "-g -O3 -Minfo -pedantic -Wall -stdpar -cudalib=cublas,curand,cufft -DARCH_CUDA")
-string(APPEND CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
+#find_package(CUDA REQUIRED)
+
+string(APPEND CMAKE_CXX_FLAGS "-g -O3 -pedantic -Wall -cudalib=cublas,curand,cufft -DARCH_CUDA -DSTDPAR_ENABLE_CUDA")
+string(APPEND CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined -stdpar")
 
 add_library(WireCellGenStdpar SHARED ${all_files})
 target_include_directories(WireCellGenStdpar

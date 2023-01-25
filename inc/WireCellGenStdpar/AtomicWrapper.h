@@ -1,8 +1,14 @@
 #ifndef WIRECELL_STDPARATOMICWRAPPER 
 #define WIRECELL_STDPARATOMICWRAPPER
 
-__device__ double atomicAddWrapper(double* address, double val);
+namespace WireCell{
+  namespace GenStdpar{
 
-__device__ float  atomicAddWrapper(float* address, float val);
+    __device__ double atomicAddWrapper(double* address, double val);
 
-#endif
+    __device__ float  atomicAddWrapper(float* address, float val);
+
+  } //namespace GenStdpar
+} //namespace WireCell
+
+#endif  //WIRECELL_STDPARATOMICWRAPPER

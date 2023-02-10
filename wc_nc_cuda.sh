@@ -2,7 +2,7 @@
 
 echo "set ENVs"
 
-export WC_GEN_STDPAR_SRC=/home/twang/myWork/wire-cell-gen-stdpar
+export WC_GEN_STDPAR_SRC=/work/twang/wire-cell-gen-porting/wire-cell-gen-stdpar/
 
 #WC_GEN_STDPAR build directory 
 [ -z $WC_GEN_STDPAR_BUILD ] && export WC_GEN_STDPAR_BUILD=$PWD
@@ -22,8 +22,8 @@ echo "WC_GEN_STDPAR_SRC directory: ${WC_GEN_STDPAR_SRC}"
 #alias
 
 #no-container
-export WIRECELL_DATA=/home/zdong/PPS/git/wire-cell-data
-export CUDA_DIR=/usr/local/cuda-11.2
+export WIRECELL_DATA=/work/twang/PPS/git/wire-cell-data
+#export CUDA_DIR=/usr/local/cuda-11.2
 
 export WC_GEN_STDPAR_LIB=$WC_GEN_STDPAR_BUILD
 

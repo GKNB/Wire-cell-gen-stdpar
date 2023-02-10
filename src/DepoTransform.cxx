@@ -261,15 +261,10 @@ bool GenStdpar::DepoTransform::operator()(const input_pointer& in, output_pointe
                 int tbin = mm.first;
 
                 ITrace::ChargeSequence charge(wave.begin() + mm.first, wave.begin() + mm.second);
-//                std::cerr << "chid = " << chid << std::endl;
-//                std::cerr << "tbin = " << tbin << std::endl;
-//                std::cerr << "wave.begin() = " << wave.begin() << std::endl;
-//                std::cerr << "mm.first = " << mm.first << std::endl;
-//                std::cerr << "mm.second = " << mm.second << std::endl;
+
                 auto trace = make_shared<SimpleTrace>(chid, tbin, charge);
                 traces.push_back(trace);
             }
-            
             double t3 = omp_get_wtime();
             td2 += t3-t2;
             std::cout<<"BD_create_Time: "<< "plane " <<iplane <<" " <<t1-t0<< std::endl;

@@ -273,6 +273,7 @@ bool GenStdpar::DepoTransform::operator()(const input_pointer& in, output_pointe
         }
     }
 
+    //This part of the code prevent us from solving the stdpar issue using the trick from NVIDIA team
     auto frame = make_shared<SimpleFrame>(m_frame_count, m_start_time, traces, m_tick);
     ++m_frame_count;
     out = frame;

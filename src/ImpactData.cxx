@@ -1,4 +1,5 @@
 #include "WireCellGenStdpar/ImpactData.h"
+#include "WireCellAux/DftTools.h"
 
 #include <iostream>             // debugging
 
@@ -34,7 +35,7 @@ Waveform::compseq_t& GenStdpar::ImpactData::weight_spectrum() const
     return m_weight_spectrum;
 }
 
-void GenStdpar::ImpactData::calculate(int nticks) const
+void GenStdpar::ImpactData::calculate(const IDFT::pointer& dft, int nticks) const
 {
     if (m_waveform.size() > 0) {
         return;
@@ -70,8 +71,8 @@ void GenStdpar::ImpactData::calculate(int nticks) const
         }
     }
 
-    m_spectrum = Waveform::dft(m_waveform);
-    m_weight_spectrum = Waveform::dft(m_weights);
+    m_spectrum = Aux::fwd_r2c(dft, m_waveform);
+    m_weight_spectrum = Aux::fwd_r2c(dft, m_weights);
 }
 
 

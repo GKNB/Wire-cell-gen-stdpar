@@ -4,13 +4,14 @@
  */
 
 #include "WireCellUtil/Waveform.h"
+#include "WireCellIface/IDFT.h"
 #include "WireCellGenStdpar/GaussianDiffusion.h"
 
 #include <memory>
 #include <vector>
 
-#ifndef WIRECELLGEN_IMPACTDATA
-#define WIRECELLGEN_IMPACTDATA
+#ifndef WIRECELL_GENSTDPAR_IMPACTDATA
+#define WIRECELL_GENSTDPAR_IMPACTDATA
 
 namespace WireCell {
     namespace GenStdpar {
@@ -56,7 +57,7 @@ namespace WireCell {
              * linear or constant (all = 0.5),
              * and honoring the Gaussian distribution (diffusion).
              */
-	    void calculate(int nticks) const;
+        void calculate(const IDFT::pointer& dft, int nticks) const;
 
 
 

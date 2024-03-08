@@ -401,30 +401,30 @@ bool GenStdpar::ImpactTransform::transform_matrix()
     std::cout << f_data[100] << std::endl;
     std::cout << "Tianle: finish testing part2" << std::endl;
   }
-  {
-    constexpr int Nout = 100;
-    constexpr int Nin = 10; 
-    std::vector<float> data(Nout * Nin);
-    std::vector<float> res(Nout);
-    std::cout << "Tianle: start testing part3" << std::endl;
-    std::for_each_n(std::execution::par_unseq, my_counting_iterator<size_t>(0), Nout * Nin,
-                    [&](unsigned int i){ data[i] = i;});
-    std::for_each_n(std::execution::par_unseq, my_counting_iterator<size_t>(0), Nout,
-                    [&](unsigned int i){ res[i] = 0.0;});
-
-    std::for_each_n(std::execution::par_unseq, my_counting_iterator<size_t>(0), Nout,
-                    [&](unsigned int i){ 
-                    for(int j=0; j<Nin; j++)
-                    {   
-                      res[i] += data[j + i * Nin];
-                    }   
-                    }); 
-
-    std::cout << res[0] << std::endl;
-    std::cout << res[13] << std::endl;
-    std::cout << res[80] << std::endl;
-    std::cout << "Tianle: finish testing part3" << std::endl;
-  } 
+//  {
+//    constexpr int Nout = 100;
+//    constexpr int Nin = 10; 
+//    std::vector<float> data(Nout * Nin);
+//    std::vector<float> res(Nout);
+//    std::cout << "Tianle: start testing part3" << std::endl;
+//    std::for_each_n(std::execution::par_unseq, my_counting_iterator<size_t>(0), Nout * Nin,
+//                    [&](unsigned int i){ data[i] = i;});
+//    std::for_each_n(std::execution::par_unseq, my_counting_iterator<size_t>(0), Nout,
+//                    [&](unsigned int i){ res[i] = 0.0;});
+//
+//    std::for_each_n(std::execution::par_unseq, my_counting_iterator<size_t>(0), Nout,
+//                    [&](unsigned int i){ 
+//                    for(int j=0; j<Nin; j++)
+//                    {   
+//                      res[i] += data[j + i * Nin];
+//                    }   
+//                    }); 
+//
+//    std::cout << res[0] << std::endl;
+//    std::cout << res[13] << std::endl;
+//    std::cout << res[80] << std::endl;
+//    std::cout << "Tianle: finish testing part3" << std::endl;
+//  } 
 
   {
     constexpr int Nout = 100;
@@ -641,7 +641,13 @@ bool GenStdpar::ImpactTransform::transform_matrix()
                     {
                       int i1 = i / acc_dim_p;
                       int i0 = i % acc_dim_p;
-                      acc_data_f_w[i0 + (acc_dim_p * i1)] = data_c[(i0 + 1) * 10 + (dim_p * i1)];
+                      data_c[i0 * 10 + (dim_p * i1)] = 0.0;       //work!!!
+//                      data_c[(i0 + 1) * 10 + (dim_p * i1)] = 0.0;       //Fail
+//                      acc_data_f_w[i] = data_c[i0 + (acc_dim_p * i1)];      //work
+//                      acc_data_f_w[i] = data_c[i];     //Work
+//                      acc_data_f_w[i] = data_c[0];     //Work
+//                      acc_data_f_w[i] = data_c[(i0 + 1) * 10 + (dim_p * i1)];     //Fail
+//                      acc_data_f_w[i0 + (acc_dim_p * i1)] = data_c[(i0 + 1) * 10 + (dim_p * i1)];     //Fail
                     });
 
     t_temp += omp_get_wtime();
